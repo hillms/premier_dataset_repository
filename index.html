@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PreMiEr Dataset Repository</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f4f6f9;
+            color: #2d2d2d;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        /* ── Page Header ── */
+        .page-header {
+            background: linear-gradient(135deg, #1a3a5c 0%, #2e6da4 100%);
+            color: white;
+            padding: 48px 40px 36px;
+            border-bottom: 4px solid #f7941d;
+        }
+
+        .page-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .page-header p {
+            font-size: 1rem;
+            opacity: 0.88;
+            max-width: 700px;
+        }
+
+        /* ── Summary Stats ── */
+        .stats-bar {
+            display: flex;
+            gap: 12px;
+            padding: 20px 40px;
+            background: #ffffff;
+            border-bottom: 1px solid #dce3ea;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: #f4f6f9;
+            border: 1px solid #dce3ea;
+            border-radius: 8px;
+            padding: 10px 22px;
+            text-align: center;
+        }
+
+        .stat-card .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1a3a5c;
+        }
+
+        .stat-card .stat-label {
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #6b7a8d;
+            margin-top: 2px;
+        }
+
+        /* ── Filters ── */
+        .filter-section {
+            background: #ffffff;
+            padding: 20px 40px;
+            border-bottom: 1px solid #dce3ea;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: flex-end;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .filter-group label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.7px;
+            color: #6b7a8d;
+        }
+
+        .filter-group input,
+        .filter-group select {
+            border: 1px solid #c8d0da;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 0.9rem;
+            color: #2d2d2d;
+            background: #fff;
+            outline: none;
+            transition: border-color 0.2s;
+            min-width: 160px;
+        }
+
+        .filter-group input:focus,
+        .filter-group select:focus {
+            border-color: #2e6da4;
+            box-shadow: 0 0 0 3px rgba(46, 109, 164, 0.12);
+        }
+
+        #searchInput {
+            min-width: 240px;
+        }
+
+        .btn-reset {
+            padding: 8px 18px;
+            background: #f4f6f9;
+            border: 1px solid #c8d0da;
+            border-radius: 6px;
+            font-size: 0.88rem;
+            color: #4a5568;
+            cursor: pointer;
+            transition: background 0.2s;
+            align-self: flex-end;
+        }
+
+        .btn-reset:hover {
+            background: #e2e8f0;
+        }
+
+        /* ── Results count ── */
+        .results-info {
+            padding: 12px 40px;
+            font-size: 0.85rem;
+            color: #6b7a8d;
+            background: #f4f6f9;
+        }
+
+        /* ── Table Container ── */
+        .table-container {
+            padding: 0 40px 40px;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #ffffff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+            margin-top: 16px;
+        }
+
+        thead {
+            background: #1a3a5c;
+            color: white;
+        }
+
+        thead th {
+            padding: 13px 14px;
+            text-align: left;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.7px;
+            white-space: nowrap;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #edf0f4;
+            transition: background 0.15s;
+        }
+
+        tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        tbody tr:hover {
+            background: #f0f5fb;
+        }
+
+        tbody tr.hidden {
+            display: none;
+        }
+
+        td {
+            padding: 12px 14px;
+            vertical-align: middle;
+            font-size: 0.88rem;
+        }
+
+        .project-id {
+            font-family: 'Courier New', monospace;
+            font-weight: 700;
+            color: #1a3a5c;
+            white-space: nowrap;
+        }
+
+        .project-title {
+            max-width: 220px;
+            color: #2d2d2d;
+        }
+
+        .pi-cell {
+            white-space: nowrap;
+        }
+
+        .pi-name {
+            font-weight: 600;
+            color: #2d2d2d;
+        }
+
+        .pi-institution {
+            font-size: 0.78rem;
+            color: #6b7a8d;
+            margin-top: 2px;
+        }
+
+        .pi-email {
+            font-size: 0.78rem;
+            color: #2e6da4;
+            text-decoration: none;
+        }
+
+        .pi-email:hover {
+            text-decoration: underline;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin: 2px 2px 2px 0;
+            white-space: nowrap;
+        }
+
+        .tag-host {
+            background: #e8f0fa;
+            color: #1a3a5c;
+        }
+
+        .tag-sample {
+            background: #fef3e2;
+            color: #b45309;
+        }
+
+        .tag-taxa {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .tag-seq {
+            background: #f3e8ff;
+            color: #6b21a8;
+        }
+
+        /* Status badges */
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        .badge-public {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .badge-pending {
+            background: #fff7ed;
+            color: #9a3412;
+            border: 1px solid #fed7aa;
+        }
+
+        .badge-unknown {
+            background: #f1f5f9;
+            color: #64748b;
+        }
+
+        /* Links */
+        .link-accession {
+            color: #2e6da4;
+            text-decoration: none;
+            font-weight: 600;
+            font-family: 'Courier New', monospace;
+            font-size: 0.83rem;
+        }
+
+        .link-accession:hover {
+            text-decoration: underline;
+        }
+
+        .link-pub {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            color: #2e6da4;
+            text-decoration: none;
+            font-size: 0.82rem;
+            font-weight: 600;
+            background: #e8f0fa;
+            padding: 3px 10px;
+            border-radius: 5px;
+            transition: background 0.2s;
+            white-space: nowrap;
+        }
+
+        .link-pub:hover {
+            background: #cce0f5;
+        }
+
+        .empty {
+            color: #b0b8c4;
+            font-style: italic;
+            font-size: 0.82rem;
+        }
+
+        /* No results */
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #6b7a8d;
+            font-style: italic;
+            display: none;
+        }
+
+        /* KBase callout */
+        .kbase-callout {
+            margin: 0 40px 8px;
+            padding: 14px 20px;
+            background: #eef4fb;
+            border-left: 4px solid #2e6da4;
+            border-radius: 0 6px 6px 0;
+            font-size: 0.88rem;
+            color: #2d2d2d;
+        }
+
+        .kbase-callout a {
+            color: #2e6da4;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .kbase-callout a:hover {
+            text-decoration: underline;
+        }
+
+        /* Footer note */
+        .footer-note {
+            padding: 16px 40px 40px;
+            font-size: 0.8rem;
+            color: #8a96a3;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .page-header, .stats-bar, .filter-section,
+            .results-info, .table-container, .footer-note {
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════
+     Page Header
+═══════════════════════════════════════════════════════ -->
+<div class="page-header">
+    <h1>Dataset Repository</h1>
+    <p>Browse available and pending microbiome datasets from PreMiEr research projects. Click accession numbers to access raw data on NCBI SRA.</p>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     Summary Stats
+═══════════════════════════════════════════════════════ -->
+<div class="stats-bar">
+    <div class="stat-card">
+        <div class="stat-value" id="stat-total">—</div>
+        <div class="stat-label">Total Datasets</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-value" id="stat-public">—</div>
+        <div class="stat-label">Public</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-value" id="stat-pending">—</div>
+        <div class="stat-label">Pending</div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     Filters
+═══════════════════════════════════════════════════════ -->
+<div class="filter-section">
+    <div class="filter-group">
+        <label for="searchInput">Search</label>
+        <input type="text" id="searchInput" placeholder="Project, PI, keyword…">
+    </div>
+    <div class="filter-group">
+        <label for="hostFilter">Host</label>
+        <select id="hostFilter">
+            <option value="">All Hosts</option>
+        </select>
+    </div>
+    <div class="filter-group">
+        <label for="sampleFilter">Sample Type</label>
+        <select id="sampleFilter">
+            <option value="">All Sample Types</option>
+        </select>
+    </div>
+    <div class="filter-group">
+        <label for="taxaFilter">Microbial Taxa</label>
+        <select id="taxaFilter">
+            <option value="">All Taxa</option>
+        </select>
+    </div>
+    <div class="filter-group">
+        <label for="institutionFilter">Institution</label>
+        <select id="institutionFilter">
+            <option value="">All Institutions</option>
+        </select>
+    </div>
+    <div class="filter-group">
+        <label for="statusFilter">Status</label>
+        <select id="statusFilter">
+            <option value="">All Statuses</option>
+            <option value="Public">Public</option>
+            <option value="Pending">Pending</option>
+        </select>
+    </div>
+    <button class="btn-reset" onclick="resetFilters()">Reset Filters</button>
+</div>
+
+<div class="results-info" id="resultsInfo"></div>
+
+<!-- ══════════════════════════════════════════════════════
+     Table
+═══════════════════════════════════════════════════════ -->
+<div class="table-container">
+    <table id="datasetTable">
+        <thead>
+            <tr>
+                <th>Project ID</th>
+                <th>Project Title</th>
+                <th>PI / Institution</th>
+                <th>Host</th>
+                <th>Sample Type</th>
+                <th>Sample Size</th>
+                <th>Microbial Taxa</th>
+                <th>Sequencing Target</th>
+                <th>Accession</th>
+                <th>Status</th>
+                <th>Publication</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody">
+            <!-- Rows injected by JS -->
+        </tbody>
+    </table>
+    <div class="no-results" id="noResults">No datasets match your current filters.</div>
+</div>
+
+<div class="kbase-callout">
+    Interested in exploring these datasets yourself? Learn how to import sequencing files into KBase using the
+    <a href="https://docs.kbase.us/data/upload-download-guide/reads" target="_blank" rel="noopener">KBase reads upload guide</a>.
+</div>
+
+<div class="footer-note">
+    Data updated March 2026 &bull; For questions about specific datasets, contact the listed PI directly &bull;
+    Raw data hosted on <a href="https://www.ncbi.nlm.nih.gov/sra" style="color:#2e6da4;">NCBI SRA</a>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     Data + Logic
+═══════════════════════════════════════════════════════ -->
+<script>
+const datasets = [
+    {
+        projectId:  "2024_Gray",
+        title:      "Cause vs consequence relationship of gut inflammation and microbial dysbiosis in inflammatory bowel diseases (IBD)",
+        host:       "Mouse and Human",
+        sampleType: "Fecal",
+        sampleSize: "11",
+        country:    "US",
+        taxa:       "Bacteria",
+        seqTarget:  "16S",
+        rawLocation:"NCBI SRA",
+        accession:  "PRJNA1105425",
+        pi:         "Anthony Fodor",
+        email:      "afodor@charlotte.edu",
+        institution:"UNC Charlotte",
+        status:     "Public",
+        publication:"https://link.springer.com/article/10.1186/s40168-024-01857-2#availability-of-data-and-materials"
+    },
+    {
+        projectId:  "2024_McCumber",
+        title:      "Effects of soil exposure on immune response",
+        host:       "Mouse",
+        sampleType: "Fecal, Lung, Environmental",
+        sampleSize: "408",
+        country:    "US",
+        taxa:       "Bacteria",
+        seqTarget:  "16S",
+        rawLocation:"NCBI SRA",
+        accession:  "PRJNA865133",
+        pi:         "Claudia K. Gunsch",
+        email:      "ckgunsch@duke.edu",
+        institution:"Duke University",
+        status:     "Public",
+        publication:"https://www.sciencedirect.com/science/article/pii/S0048969724010040?casa_token=9HG31YSjhJIAAAAA:tO0XuLgqQdrs2i93snigtFPHFJ7vJIiDhopAiUaAf2ZFTdo3EqYx3wqOGAhaJPD07SpBcO6sx14"
+    },
+    {
+        projectId:  "2026_PerezCastro",
+        title:      "Household-scale connectivity dominates bacterial and fungal communities in kitchen sinks",
+        host:       "Environmental",
+        sampleType: "Plumbing, Surface",
+        sampleSize: "123",
+        country:    "US",
+        taxa:       "Bacteria and Fungi",
+        seqTarget:  "16S",
+        rawLocation:"NCBI SRA",
+        accession:  "PRJNA1392520",
+        pi:         "Liesl Jeffers-Francis",
+        email:      "ljeffersfrancis@ncat.edu",
+        institution:"NC A&T",
+        status:     "Public",
+        publication:"In Prep"
+    },
+    {
+        projectId:  "2025_Kim",
+        title:      "Relationship between bariatric surgery, asthma, and gut and lung microbiomes",
+        host:       "Mouse",
+        sampleType: "Fecal",
+        sampleSize: "91",
+        country:    "US",
+        taxa:       "Bacteria",
+        seqTarget:  "16S",
+        rawLocation:"NCBI SRA",
+        accession:  "PRJNA1111477",
+        pi:         "Jennifer L. Ingram",
+        email:      "jennifer.ingram@duke.edu",
+        institution:"Duke University",
+        status:     "Public",
+        publication:"https://www.dovepress.com/glucagon-like-peptide-1-receptor-glp1r-deficiency-does-not-appreciably-peer-reviewed-fulltext-article-JAA"
+    },
+    {
+        projectId:  "2026_Hill",
+        title:      "Temporal stability and niche partitioning of bacterial communities in residential sink P-traps",
+        host:       "Environmental",
+        sampleType: "Plumbing",
+        sampleSize: "144",
+        country:    "US",
+        taxa:       "Bacteria",
+        seqTarget:  "16S",
+        rawLocation:"NCBI SRA",
+        accession:  "PRJNA1363208",
+        pi:         "Claudia K. Gunsch",
+        email:      "ckgunsch@duke.edu",
+        institution:"Duke University",
+        status:     "Public",
+        publication:"https://www.biorxiv.org/content/10.64898/2026.02.17.706431v1"
+    },
+    {
+        projectId:  "2024_Ferdous",
+        title:      "UNC Charlotte SARS-CoV-2 campus monitoring program",
+        host:       "Environmental",
+        sampleType: "Wastewater",
+        sampleSize: "38",
+        country:    "US",
+        taxa:       "Viruses",
+        seqTarget:  "RNA",
+        rawLocation:"NCBI SRA",
+        accession:  "PRJNA1031245",
+        pi:         "Jessica A. Schlueter",
+        email:      "jschluet@charlotte.edu",
+        institution:"UNC Charlotte",
+        status:     "Public",
+        publication:"https://www.sciencedirect.com/science/article/pii/S0048969724046631#da0005"
+    },
+    {
+        projectId:  "2026_Saber",
+        title:      "Pathogen Distribution in Bolivian Hospitals",
+        host:       "Environmental",
+        sampleType: "Plumbing, Air, Surface",
+        sampleSize: "194",
+        country:    "Bolivia",
+        taxa:       "Bacteria",
+        seqTarget:  "16S",
+        rawLocation:"TBD",
+        accession:  "TBD",
+        pi:         "Joe Brown",
+        email:      "joebrown@unc.edu",
+        institution:"UNC Chapel Hill",
+        status:     "Pending",
+        publication:"In Prep"
+    },
+    {
+        projectId:  "2026_Saber",
+        title:      "Pathogen Distribution in Bolivian Hospitals",
+        host:       "Environmental",
+        sampleType: "Plumbing, Air",
+        sampleSize: "81",
+        country:    "Bolivia",
+        taxa:       "Bacteria",
+        seqTarget:  "WGS",
+        rawLocation:"TBD",
+        accession:  "TBD",
+        pi:         "Joe Brown",
+        email:      "joebrown@unc.edu",
+        institution:"UNC Chapel Hill",
+        status:     "Pending",
+        publication:"In Prep"
+    },
+    {
+        projectId:  "2026_Gottel",
+        title:      "Pathogen Remediation in Hospital Plumbing",
+        host:       "Environmental",
+        sampleType: "Plumbing",
+        sampleSize: "2234",
+        country:    "US",
+        taxa:       "Bacteria",
+        seqTarget:  "16S",
+        rawLocation:"TBD",
+        accession:  "TBD",
+        pi:         "Claudia K. Gunsch",
+        email:      "ckgunsch@duke.edu",
+        institution:"Duke University",
+        status:     "Pending",
+        publication:"In Prep"
+    },
+    {
+        projectId:  "2026_Gottel",
+        title:      "Pathogen Remediation in Hospital Plumbing",
+        host:       "Environmental",
+        sampleType: "Plumbing",
+        sampleSize: "68",
+        country:    "US",
+        taxa:       "Bacteria and Fungi",
+        seqTarget:  "Metagenomics",
+        rawLocation:"TBD",
+        accession:  "TBD",
+        pi:         "Claudia K. Gunsch",
+        email:      "ckgunsch@duke.edu",
+        institution:"Duke University",
+        status:     "Pending",
+        publication:"In Prep"
+    }
+];
+
+// ── Helpers ──────────────────────────────────────────
+function empty(val) {
+    return !val || val.trim() === "";
+}
+
+function badge(status) {
+    if (!status) return `<span class="badge badge-unknown">—</span>`;
+    const cls = status.toLowerCase() === "public" ? "badge-public" : "badge-pending";
+    return `<span class="badge ${cls}">${status}</span>`;
+}
+
+function accessionLink(acc, location) {
+    if (!acc || acc === "TBD") return `<span class="empty">—</span>`;
+    const url = `https://www.ncbi.nlm.nih.gov/bioproject/${acc}`;
+    return `<a class="link-accession" href="${url}" target="_blank" rel="noopener">${acc}</a>`;
+}
+
+function pubLink(url) {
+    if (!url) return `<span class="empty">—</span>`;
+    if (url === "In Prep") return `<span class="empty">In Prep</span>`;
+    return `<a class="link-pub" href="${url}" target="_blank" rel="noopener">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/>
+            <polyline points="15 3 21 3 21 9"/>
+            <line x1="10" y1="14" x2="21" y2="3"/>
+        </svg>
+        View
+    </a>`;
+}
+
+function tagList(val, cls) {
+    if (!val) return `<span class="empty">—</span>`;
+    return val.split(",").map(v => `<span class="tag ${cls}">${v.trim()}</span>`).join(" ");
+}
+
+function piCell(d) {
+    if (!d.pi) return `<span class="empty">—</span>`;
+    return `
+        <div class="pi-name">${d.pi}</div>
+        <div class="pi-institution">${d.institution || ""}</div>
+        ${d.email ? `<a class="pi-email" href="mailto:${d.email}">${d.email}</a>` : ""}
+    `;
+}
+
+// ── Build table rows ──────────────────────────────────
+function buildRows(data) {
+    const tbody = document.getElementById("tableBody");
+    tbody.innerHTML = "";
+    data.forEach((d, i) => {
+        const tr = document.createElement("tr");
+        tr.dataset.index = i;
+        tr.innerHTML = `
+            <td><span class="project-id">${d.projectId}</span></td>
+            <td class="project-title">${d.title || `<span class="empty">—</span>`}</td>
+            <td class="pi-cell">${piCell(d)}</td>
+            <td>${d.host ? `<span class="tag tag-host">${d.host}</span>` : `<span class="empty">—</span>`}</td>
+            <td>${tagList(d.sampleType, "tag-sample")}</td>
+            <td>${d.sampleSize || `<span class="empty">—</span>`}</td>
+            <td>${d.taxa ? `<span class="tag tag-taxa">${d.taxa}</span>` : `<span class="empty">—</span>`}</td>
+            <td>${d.seqTarget ? `<span class="tag tag-seq">${d.seqTarget}</span>` : `<span class="empty">—</span>`}</td>
+            <td>${accessionLink(d.accession, d.rawLocation)}</td>
+            <td>${badge(d.status)}</td>
+            <td>${pubLink(d.publication)}</td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+// ── Populate filter dropdowns ─────────────────────────
+function populateFilters() {
+    const fields = {
+        hostFilter:        [...new Set(datasets.map(d => d.host).filter(Boolean))].sort(),
+        sampleFilter:      [...new Set(datasets.flatMap(d => d.sampleType.split(",").map(s => s.trim())).filter(Boolean))].sort(),
+        taxaFilter:        [...new Set(datasets.map(d => d.taxa).filter(Boolean))].sort(),
+        institutionFilter: [...new Set(datasets.map(d => d.institution).filter(Boolean))].sort()
+    };
+
+    for (const [id, values] of Object.entries(fields)) {
+        const sel = document.getElementById(id);
+        values.forEach(v => {
+            const opt = document.createElement("option");
+            opt.value = v;
+            opt.textContent = v;
+            sel.appendChild(opt);
+        });
+    }
+}
+
+// ── Stats ─────────────────────────────────────────────
+function updateStats(visible) {
+    document.getElementById("stat-total").textContent = visible.length;
+    document.getElementById("stat-public").textContent = visible.filter(d => d.status === "Public").length;
+    document.getElementById("stat-pending").textContent = visible.filter(d => d.status === "Pending").length;
+}
+
+// ── Filter logic ──────────────────────────────────────
+function applyFilters() {
+    const search      = document.getElementById("searchInput").value.toLowerCase();
+    const host        = document.getElementById("hostFilter").value;
+    const sample      = document.getElementById("sampleFilter").value;
+    const taxa        = document.getElementById("taxaFilter").value;
+    const institution = document.getElementById("institutionFilter").value;
+    const status      = document.getElementById("statusFilter").value;
+
+    const rows = document.querySelectorAll("#tableBody tr");
+    let visible = [];
+
+    rows.forEach((row, i) => {
+        const d = datasets[i];
+        const searchText = Object.values(d).join(" ").toLowerCase();
+
+        const matchSearch      = !search      || searchText.includes(search);
+        const matchHost        = !host        || d.host === host;
+        const matchSample      = !sample      || d.sampleType.split(",").map(s => s.trim()).includes(sample);
+        const matchTaxa        = !taxa        || d.taxa === taxa;
+        const matchInstitution = !institution || d.institution === institution;
+        const matchStatus      = !status      || d.status === status;
+
+        const show = matchSearch && matchHost && matchSample && matchTaxa && matchInstitution && matchStatus;
+
+        row.classList.toggle("hidden", !show);
+        if (show) visible.push(d);
+    });
+
+    const info = document.getElementById("resultsInfo");
+    info.textContent = `Showing ${visible.length} of ${datasets.length} dataset${datasets.length !== 1 ? "s" : ""}`;
+
+    document.getElementById("noResults").style.display = visible.length === 0 ? "block" : "none";
+    updateStats(visible);
+}
+
+function resetFilters() {
+    ["searchInput","hostFilter","sampleFilter","taxaFilter","institutionFilter","statusFilter"]
+        .forEach(id => {
+            const el = document.getElementById(id);
+            el.value = el.tagName === "INPUT" ? "" : "";
+        });
+    applyFilters();
+}
+
+// ── Init ──────────────────────────────────────────────
+buildRows(datasets);
+populateFilters();
+applyFilters();
+
+document.getElementById("searchInput").addEventListener("input", applyFilters);
+document.getElementById("hostFilter").addEventListener("change", applyFilters);
+document.getElementById("sampleFilter").addEventListener("change", applyFilters);
+document.getElementById("taxaFilter").addEventListener("change", applyFilters);
+document.getElementById("institutionFilter").addEventListener("change", applyFilters);
+document.getElementById("statusFilter").addEventListener("change", applyFilters);
+</script>
+
+</body>
+</html>
