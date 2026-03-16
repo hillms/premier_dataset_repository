@@ -361,20 +361,21 @@
             text-decoration: underline;
         }
 
-        /* PreMiEr Logo Header */
-        .logo-header {
+        /* PreMiEr Logo Footer */
+        .logo-footer {
             background: #ffffff;
-            padding: 20px 40px;
+            padding: 30px 40px 40px;
             text-align: center;
-            border-bottom: 1px solid #dce3ea;
+            border-top: 1px solid #dce3ea;
+            margin-top: 20px;
         }
 
-        .logo-header img {
+        .logo-footer img {
             height: 60px;
             width: auto;
         }
 
-        .logo-header a {
+        .logo-footer a {
             display: inline-block;
             text-decoration: none;
         }
@@ -389,28 +390,18 @@
         /* Responsive */
         @media (max-width: 900px) {
             .page-header, .stats-bar, .filter-section,
-            .results-info, .table-container, .footer-note, .logo-header {
+            .results-info, .table-container, .footer-note, .logo-footer {
                 padding-left: 16px;
                 padding-right: 16px;
             }
 
-            .logo-header img {
+            .logo-footer img {
                 height: 50px;
             }
         }
     </style>
 </head>
 <body>
-
-<!-- ══════════════════════════════════════════════════════
-     PreMiEr Logo Header
-═══════════════════════════════════════════════════════ -->
-<div class="logo-header">
-    <a href="https://premier-microbiome.org/" target="_blank" rel="noopener">
-        <img src="https://premier-microbiome.org/wp-content/uploads/sites/6/2025/10/PreMiEr-logo-transparent-buffer.png"
-             alt="PreMiEr - Precision Microbiome Engineering" />
-    </a>
-</div>
 
 <!-- ══════════════════════════════════════════════════════
      Page Header
@@ -522,6 +513,16 @@
 <div class="footer-note">
     Data updated March 2026 &bull; For questions about specific datasets, contact the listed PI directly &bull;
     Raw data hosted on <a href="https://www.ncbi.nlm.nih.gov/sra" style="color:#2e6da4;">NCBI SRA</a>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     PreMiEr Logo Footer
+═══════════════════════════════════════════════════════ -->
+<div class="logo-footer">
+    <a href="https://premier-microbiome.org/" target="_blank" rel="noopener">
+        <img src="https://premier-microbiome.org/wp-content/uploads/sites/6/2025/10/PreMiEr-logo-transparent-buffer.png"
+             alt="PreMiEr - Precision Microbiome Engineering" />
+    </a>
 </div>
 
 <!-- ══════════════════════════════════════════════════════
