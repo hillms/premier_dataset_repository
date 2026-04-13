@@ -2,7 +2,7 @@
 
 A web-based catalog of microbiome datasets from PreMiEr (Precision Microbiome Engineering) research projects.
 
-**🌐 Live Website**: https://hillms.github.io/repository_test/
+**🌐 Live Website**: https://hillms.github.io/premier_dataset_repository
 
 ## Overview
 
